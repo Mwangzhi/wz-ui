@@ -32,9 +32,57 @@
     <Boundary/>
 
     <wz-row>
-      <wz-col></wz-col>
+      <wz-col :span="12">
+        <div>aaa</div>
+      </wz-col>
+      <wz-col :span="12">
+        <div>bbb</div>
+      </wz-col>
+      
+    </wz-row>
+    <wz-row>
+      <wz-col :span="24">
+        <div>ccc</div>
+      </wz-col>
+    </wz-row>
+
+    <Boundary />
+    
+    <wz-row>
+      <wz-col :span="6">
+        <div>aaa</div>
+      </wz-col>
+      <wz-col :span="6" :offset="12">
+        <div>bbb</div>
+      </wz-col>
+    </wz-row>
+
+    <Boundary />
+
+    <wz-row :gutter="20">
+      <wz-col :span="8">
+        <div>aaa</div>
+      </wz-col>
+      <wz-col :span="8">
+        <div>bbb</div>
+      </wz-col>
+      <wz-col :span="8">
+        <div>ccc</div>
+      </wz-col>
+    </wz-row>
+
+    <Boundary />
+
+    <wz-row justify="space-around">
+      <wz-col :span="3">
+        <div class="">ddd</div>
+      </wz-col>
+      <wz-col :span="3">
+        <div class="">eee</div>
+      </wz-col>
     </wz-row>
   </div>
+
 </template>
 
 <script>
