@@ -12,6 +12,7 @@
       :on-error="handleError"
       :on-progress="handleProgress"
       :file-list="fileList"
+      :before-upload="beforeUpload"
     >
       <wz-button icon="shangchuan" type="primary">点击上传</wz-button>
       <div slot="tip">只能上传jpg文件，且大小不能超过500k</div>
@@ -33,13 +34,26 @@ export default {
   },
   components: { Boundary },
   methods: {
-    handleExceed(files,fileList) {
-      console.log(files,fileList);
+    handleExceed(files, fileList) {
+      console.log(files, fileList);
     },
-    handleChange() {},
+    handleChange(file) {
+      console.log(file);
+    },
     handleSuccess() {},
     handleError() {},
-    handleProgress() {}
+    handleProgress() {},
+    beforeUpload(rawFile) {
+      let limitSize = rawFile.size / 1024 / 500 > 500;
+      if (limitSize) {
+        console.log("当前超过了最大限制");
+        return false;
+      } else if (!rawFile.name.endsWith(".jpg")) {
+        console.log("文件类型不对");
+        return false;
+      }
+      return true;
+    }
   }
 };
 </script>
