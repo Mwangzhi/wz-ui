@@ -48,8 +48,8 @@ export default {
       this.$refs.input.value='';
       this.$refs.input.click();
     },
-    handleChange(){
-        console.log('change');
+    handleChange(e){
+        const files=e.target.files;
     }
   }
 };
