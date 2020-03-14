@@ -6,6 +6,7 @@
       :limit="3"
       accept="image/jpeg"
       :multiple="true"
+      :drag="true"
       :on-exceed="handleExceed"
       :on-change="handleChange"
       :on-success="handleSuccess"
@@ -27,8 +28,7 @@ export default {
   data() {
     return {
       fileList: [
-        { url: "xxx", name: "wangzhi" },
-        { url: "xxx", name: "wangzhi" }
+        // { url: "xxx", name: "wangzhi" }
       ]
     };
   },
