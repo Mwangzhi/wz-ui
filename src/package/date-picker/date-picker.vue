@@ -17,7 +17,7 @@
             <span v-for="week in weeks" :key="week" class="cell">{{week}}</span>
           </div>
           <div v-for="i in 6" :key="`row_${i}`">
-            <span v-for="j in 7" :key="`col_${j}`" class="cell">1</span>
+            <span v-for="j in 7" :key="`col_${j}`" class="cell">{{getCurrentDate(i,j).getDate()}}</span>
           </div>
         </template>
         <template v-if="mode==='years'">years</template>
@@ -84,6 +84,17 @@ export default {
         let { year, month, day } = this.time;
         return `${year}年${month + 1}月${day}日`;
       }
+    },
+    visibleData() {
+      let firstDay = new Date(this.tempTime.year, this.tempTime.month, 1);
+      let weekDay = firstDay.getDay();
+      weekDay = weekDay === 0 ? 7 : weekDay;
+      let start = firstDay - weekDay * 60 * 60 * 2 * 1000;
+      let arr = [];
+      for (let i = 0; i < 42; i++) {
+        arr.push(new Date(start + i * 60 * 60 * 24 * 1000));
+      }
+      return arr;
     }
   },
   methods: {
@@ -92,6 +103,9 @@ export default {
     },
     handleBlur() {
       this.isVisible = false;
+    },
+    getCurrentDate(i, j) {
+      return this.visibleData[(i - 1) * 7 + (j - 1)];
     }
   }
 };

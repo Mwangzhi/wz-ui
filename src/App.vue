@@ -35,7 +35,7 @@ export default {
       fileList: [
         // { url: "xxx", name: "wangzhi" }
       ],
-      value1: new Date(2025, 3, 2),
+      value1: new Date(),
       value2: []
     };
   },
