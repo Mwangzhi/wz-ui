@@ -33,8 +33,8 @@ export default {
   },
   components: { Boundary },
   methods: {
-    handleExceed(e) {
-      console.log(e);
+    handleExceed(files,fileList) {
+      console.log(files,fileList);
     },
     handleChange() {},
     handleSuccess() {},
