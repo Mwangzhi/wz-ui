@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    date-range-picker
+  </div>
 </template>
 
 <script>
