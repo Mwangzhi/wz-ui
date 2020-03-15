@@ -19,7 +19,7 @@
       <div slot="tip">只能上传jpg文件，且大小不能超过500k</div>
     </wz-upload>
     <Boundary />
-    <div style="margin:0 auto; width:500px">
+    <div style="margin:0 auto; width:200px">
       <wz-date-picker v-model="value1"></wz-date-picker>
     </div>
     <!-- <wz-date-range-picker v-model="value2"></wz-date-range-picker> -->
@@ -35,7 +35,7 @@ export default {
       fileList: [
         // { url: "xxx", name: "wangzhi" }
       ],
-      value1: new Date(),
+      value1: '',
       value2: []
     };
   },

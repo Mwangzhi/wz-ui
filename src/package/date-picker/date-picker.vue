@@ -1,15 +1,15 @@
 <template>
   <div class="wz-date-picker" v-click-outside="handleBlur">
-    <wz-input suffix-icon="rili" @focus="handleFocus" :value="formateDate"></wz-input>
+    <wz-input suffix-icon="rili" @focus="handleFocus" :value="formateDate" @change="handleChange"></wz-input>
     <div class="wz-date-content" v-if="isVisible">
       <div class="wz-date-picker-head">
-        <wz-icon icon="prev"></wz-icon>
-        <wz-icon icon="left"></wz-icon>
+        <wz-icon icon="prev" @click="changeYear(-1)"></wz-icon>
+        <wz-icon icon="left" @click="changeMonth(-1)"></wz-icon>
 
         <span>{{tempTime.year}}年{{tempTime.month+1}}月</span>
 
-        <wz-icon icon="right"></wz-icon>
-        <wz-icon icon="next"></wz-icon>
+        <wz-icon icon="right" @click="changeMonth(1)"></wz-icon>
+        <wz-icon icon="next" @click="changeYear(1)"></wz-icon>
       </div>
       <div class="wz-date-picker-content">
         <template v-if="mode==='dates'">
@@ -17,7 +17,16 @@
             <span v-for="week in weeks" :key="week" class="cell">{{week}}</span>
           </div>
           <div v-for="i in 6" :key="`row_${i}`">
-            <span v-for="j in 7" :key="`col_${j}`" class="cell">{{getCurrentDate(i,j).getDate()}}</span>
+            <span
+              v-for="j in 7"
+              :key="`col_${j}`"
+              class="cell cell-dates"
+              @click="selectDate(getCurrentDate(i,j))"
+              :class="{isNotCurrentMonth:!isCurrentMonth(getCurrentDate(i,j)),
+              isToday:isToday(getCurrentDate(i,j)),
+              isSelect:isSelect(getCurrentDate(i,j))
+              }"
+            >{{getCurrentDate(i,j).getDate()}}</span>
           </div>
         </template>
         <template v-if="mode==='years'">years</template>
@@ -82,14 +91,16 @@ export default {
     formateDate() {
       if (this.value) {
         let { year, month, day } = this.time;
-        return `${year}年${month + 1}月${day}日`;
+        return `${year}-${String(month + 1).padStart(2, 0)}-${String(
+          day
+        ).padStart(2, 0)}`;
       }
     },
     visibleData() {
       let firstDay = new Date(this.tempTime.year, this.tempTime.month, 1);
       let weekDay = firstDay.getDay();
       weekDay = weekDay === 0 ? 7 : weekDay;
-      let start = firstDay - weekDay * 60 * 60 * 2 * 1000;
+      let start = firstDay - weekDay * 60 * 60 * 24 * 1000;
       let arr = [];
       for (let i = 0; i < 42; i++) {
         arr.push(new Date(start + i * 60 * 60 * 24 * 1000));
@@ -106,6 +117,55 @@ export default {
     },
     getCurrentDate(i, j) {
       return this.visibleData[(i - 1) * 7 + (j - 1)];
+    },
+    isCurrentMonth(date) {
+      let { year, month } = this.tempTime;
+      let [y, m] = getYearMonthDay(date);
+      return year === y && month === m;
+    },
+    isToday(date) {
+      let [y, m, d] = getYearMonthDay(new Date(date));
+      let [year, month, day] = getYearMonthDay(new Date());
+      return year == y && month === m && day === d;
+    },
+    selectDate(date) {
+      this.$emit("input", date);
+      this.handleBlur();
+    },
+    isSelect(date) {
+      let { year, month, day } = this.time;
+      let [y, m, d] = getYearMonthDay(date);
+      return year === y && m === month && d === day;
+    },
+    changeMonth(count) {
+      const oldDate = new Date(this.tempTime.year, this.tempTime.month);
+      const newDate = oldDate.setMonth(oldDate.getMonth() + count);
+      let [year, month] = getYearMonthDay(new Date(newDate));
+      this.tempTime.year = year;
+      this.tempTime.month = month;
+    },
+    changeYear(count) {
+      const oldDate = new Date(this.tempTime.year, this.tempTime.month);
+      const newDate = oldDate.setFullYear(oldDate.getFullYear() + count);
+      let [year] = getYearMonthDay(new Date(newDate));
+      this.tempTime.year = year;
+    },
+    handleChange(e) {
+      let newValue = e.target.value;
+      let regExp = /^(\d{4})-(\d{1,2})-(\d{1,2})$/;
+      if (newValue.match(regExp)) {
+        this.$emit("input", new Date(RegExp.$1, RegExp.$2 - 1, RegExp.$3));
+      } else {
+        e.target.value = this.formateDate;
+      }
+      this.handleBlur();
+    }
+  },
+  watch: {
+    value(newValue) {
+      let [year, month, day] = getYearMonthDay(newValue);
+      this.time = { year, month, day };
+      this.tempTime = { ...this.time };
     }
   }
 };
@@ -135,6 +195,23 @@ export default {
     display: inline-block;
     text-align: center;
     line-height: 40px;
+    font-weight: 200;
+  }
+  .isNotCurrentMonth {
+    color: #ccc;
+  }
+  .cell-dates:hover:not(.isNotCurrentMonth):not(.isSelect) {
+    color: $primary;
+  }
+  .isToday {
+    color: $primary;
+    font-weight: bold;
+    border-radius: 50%;
+  }
+  .isSelect {
+    color: #fff;
+    background: $primary;
+    border-radius: 50px;
   }
 }
 </style>
